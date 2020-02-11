@@ -23,7 +23,8 @@ Use `Node.js` and `Express` to build an API that performs _CRUD_ operations on `
 
 The `data` folder contains a database populated with test `posts`.
 
-Database access will be done using the `db.js` file included inside the `data` folder.
+Database access will be done using the `db.js` file include
+d inside the `data` folder.
 
 The `db.js` publishes the following methods:
 
