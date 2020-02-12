@@ -26,7 +26,16 @@ router.get('/posts/:id', (req, res) => {
 
 	Posts.findById(id)
 		.then(post => {
-			res.status(200).json(post);
+			if (post.length === 0) {
+				console.log('404');
+				res
+					.status(404)
+					.json({ message: 'The post with the specified ID does not exist.' });
+			} else {
+				console.log('post', post);
+				console.log('id', id);
+				res.status(200).json(post);
+			}
 		})
 		.catch(err => {
 			console.log(err);
@@ -66,12 +75,10 @@ router.post('/posts', (req, res) => {
 				res.status(201).json(req.body);
 			})
 			.catch(err => {
-				res
-					.status(500)
-					.json({
-						errorMessage:
-							'There was an error while saving the post to the database'
-					});
+				res.status(500).json({
+					errorMessage:
+						'There was an error while saving the post to the database'
+				});
 			});
 	}
 });
@@ -100,8 +107,14 @@ router.delete('/posts/:id', (req, res) => {
 
 	Posts.remove(id)
 		.then(deleted => {
-			console.log('number of posts now', deleted);
-			res.status(200).json(deleted);
+			if (deleted === 0) {
+				res.status(404).json({
+					errorMessage: 'The post with the specified ID does not exist.'
+				});
+			} else {
+				console.log('number of posts now', deleted);
+				res.status(200).json(deleted);
+			}
 		})
 		.catch(err => {
 			res.status(500).json({ errorMessage: 'error' });
@@ -118,7 +131,7 @@ router.put('/posts/:id', (req, res) => {
 	Posts.update(id, changes)
 		.then(updated => {
 			console.log('updated', updated);
-			res.status(200).json(updated);
+			res.status(200).json(changes);
 		})
 		.catch(err => {
 			res.status(500).json({ errorMessage: 'error' });
