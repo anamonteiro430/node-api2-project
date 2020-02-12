@@ -51,17 +51,29 @@ router.get('/posts/:id/comments', (req, res) => {
 		});
 });
 
+//client creates a post  ✔
 router.post('/posts', (req, res) => {
-	const body = req.body;
-	console.log(body);
-	Posts.insert(body)
-		.then(posted => {
-			console.log('posted', posted);
-			res.status(201).json(posted);
-		})
-		.catch(err => {
-			res.status(500).json({ errorMessage: 'error' });
+	const { title, contents } = req.body;
+	console.log('this is body', req.body);
+	if (!title || !contents) {
+		res.status(400).json({
+			errorMessage: 'Please provide title and contents for the post.'
 		});
+	} else {
+		Posts.insert(req.body)
+			.then(posted => {
+				console.log('posted', posted);
+				res.status(201).json(req.body);
+			})
+			.catch(err => {
+				res
+					.status(500)
+					.json({
+						errorMessage:
+							'There was an error while saving the post to the database'
+					});
+			});
+	}
 });
 
 router.post('/posts/:id/comments', (req, res) => {
